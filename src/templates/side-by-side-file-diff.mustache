@@ -2,6 +2,10 @@
     <div class="d2h-file-header">
       {{{filePath}}}
     </div>
+    {{#file.isBinary}}
+    <div class="d2h-file-binary-msg">Binary files differ</div>
+    {{/file.isBinary}}
+    {{^file.isBinary}}
     <div class="d2h-files-diff">
         <div class="d2h-file-side-diff">
             <div class="d2h-code-wrapper">
@@ -22,4 +26,5 @@
             </div>
         </div>
     </div>
+    {{/file.isBinary}}
 </div>

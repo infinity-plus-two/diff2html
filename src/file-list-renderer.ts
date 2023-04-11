@@ -18,6 +18,7 @@ export function render(diffFiles: DiffFile[], hoganUtils: HoganJsUtils): string 
           fileName: renderUtils.filenameDiff(file),
           deletedLines: '-' + file.deletedLines,
           addedLines: '+' + file.addedLines,
+          file: file
         },
         {
           fileIcon: hoganUtils.template(iconsBaseTemplatesPath, renderUtils.getFileIcon(file)),

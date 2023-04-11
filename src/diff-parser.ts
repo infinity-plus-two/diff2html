@@ -23,8 +23,8 @@ function getFilename(line: string, linePrefix?: string, extraPrefix?: string): s
   const prefixes = extraPrefix !== undefined ? [...baseDiffFilenamePrefixes, extraPrefix] : baseDiffFilenamePrefixes;
 
   const FilenameRegExp = linePrefix
-    ? new RegExp(`^${escapeForRegExp(linePrefix)} "?(.+?)"?$`)
-    : new RegExp('^"?(.+?)"?$');
+    ? new RegExp(`^${escapeForRegExp(linePrefix)} "?(.+?)"?(\\t\\([^)]+\\))?$`)
+    : new RegExp('^"?(.+?)"?(\\t\\([^)]+\\))?$');
 
   const [, filename = ''] = FilenameRegExp.exec(line) || [];
   const matchingPrefix = prefixes.find(p => filename.indexOf(p) === 0);
@@ -296,6 +296,12 @@ export function parse(diffInput: string, config: DiffParserConfig = {}): DiffFil
       if ((values = unixDiffBinaryStart.exec(line))) {
         possibleOldName = getFilename(values[1], undefined, config.dstPrefix);
         possibleNewName = getFilename(values[2], undefined, config.srcPrefix);
+      } else {
+        const subversionDiffBinaryStart = /^Binary files (.*?)\s*and (.*?)\s*differ/;
+        if ((values = subversionDiffBinaryStart.exec(line))) {
+          possibleOldName = getFilename(values[1], undefined, config.dstPrefix);
+          possibleNewName = getFilename(values[2], undefined, config.srcPrefix);
+        }
       }
 
       if (currentFile === null) {
